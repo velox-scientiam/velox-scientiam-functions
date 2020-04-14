@@ -5,7 +5,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
-    "prettier": "find src -name '*.ts' | xargs prettier --write",
+    "prettier": "prettier --write 'src/**/*.{js,json,md,scss,ts,html}'",
+    "prettier:check": "prettier --check 'src/**/*.{js,json,md,scss,ts,html}'",
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",

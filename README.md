@@ -10,4 +10,6 @@ Cloud functions for velox-scientiam
 - Deploy to firebase `yarn deploy`
 
 ## Other useful commands
-- lint files `yarn lint`
+- Run tslint `yarn lint`
+- Run prettier and fix `yarn prettier`
+- Run prettier to only check `yarn prettier:check`
