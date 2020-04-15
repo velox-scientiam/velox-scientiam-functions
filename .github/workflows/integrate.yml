@@ -13,5 +13,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 10
+      - run: cd functions
       - run: yarn --frozen-lockfile --ci
       - run: yarn build
