@@ -1,4 +1,4 @@
-name: velox-scientiam-functions CI
+name: velox-scientiam-functions-CI
 
 on:
     pull_request:
