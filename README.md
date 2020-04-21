@@ -11,5 +11,6 @@ Cloud functions for velox-scientiam
 
 ## Other useful commands
 - Run tslint `yarn lint`
+- Run unit tests `yarn test`
 - Run prettier and fix `yarn prettier`
 - Run prettier to only check `yarn prettier:check`
