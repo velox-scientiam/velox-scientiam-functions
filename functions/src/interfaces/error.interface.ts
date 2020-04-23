@@ -1,0 +1,7 @@
+export enum ErrorMessages {
+  GENERAL_ERORR = 'Something went wrong',
+  EMPTY = 'Field must not be empty',
+  NOT_VALID = 'Field must be valid',
+  USERNAME_IN_USE = 'Username is already in use',
+  EMAIL_IN_USE = 'Email is already in use',
+}

@@ -1,5 +1,10 @@
 import * as functions from 'firebase-functions';
+import * as express from 'express';
 
-export const helloVelox = functions.https.onRequest((_request, response) => {
-  response.send('Hello Velox!');
-});
+import { signUp } from './handlers';
+
+const app = express();
+
+app.post('/signup', signUp);
+
+export const api = functions.region('europe-west1').https.onRequest(app);
