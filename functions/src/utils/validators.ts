@@ -16,9 +16,17 @@ export const validateSignUpData = (data: SignUpData) => {
     errors.email = ErrorMessages.NOT_VALID;
   }
 
-  if (isEmpty(data.password)) errors.password = ErrorMessages.EMPTY;
-  if (data.password !== data.confirmPassword) errors.confirmPassword = ErrorMessages.NOT_VALID;
-  if (isEmpty(data.username)) errors.username = ErrorMessages.EMPTY;
+  if (isEmpty(data.password)) {
+    errors.password = ErrorMessages.EMPTY;
+  }
+
+  if (data.password !== data.confirmPassword) {
+    errors.confirmPassword = ErrorMessages.NOT_VALID;
+  }
+
+  if (isEmpty(data.username)) {
+    errors.username = ErrorMessages.EMPTY;
+  }
 
   return {
     errors,
