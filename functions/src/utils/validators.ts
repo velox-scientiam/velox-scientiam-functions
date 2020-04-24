@@ -7,24 +7,24 @@ export const isEmail = (email: string) => {
   return !email || !!email.match(emailRegExP);
 };
 
-export const validateSignUpData = (data: SignUpData) => {
+export const validateSignUpData = ({ email, password, confirmPassword, username }: SignUpData) => {
   const errors = {} as SignUpData;
 
-  if (isEmpty(data.email)) {
+  if (isEmpty(email)) {
     errors.email = ErrorMessages.EMPTY;
-  } else if (!isEmail(data.email)) {
+  } else if (!isEmail(email)) {
     errors.email = ErrorMessages.NOT_VALID;
   }
 
-  if (isEmpty(data.password)) {
+  if (isEmpty(password)) {
     errors.password = ErrorMessages.EMPTY;
   }
 
-  if (data.password !== data.confirmPassword) {
+  if (password !== confirmPassword) {
     errors.confirmPassword = ErrorMessages.NOT_VALID;
   }
 
-  if (isEmpty(data.username)) {
+  if (isEmpty(username)) {
     errors.username = ErrorMessages.EMPTY;
   }
 

@@ -3,11 +3,11 @@ import { HttpsError } from 'firebase-functions/lib/providers/https';
 import { Request, Response } from 'express';
 
 import { validateSignUpData, db, config } from '../utils';
-import { ErrorMessages, UserData, LogMessages } from '../interfaces';
+import { ErrorMessages, UserData, LogMessages, SignupResponse } from '../interfaces';
 
 firebase.initializeApp(config);
 
-export const signUp = async (request: Request, response: Response) => {
+const createSignup = async (request: Request): Promise<SignupResponse> => {
   const { email, password, confirmPassword, username } = request.body;
 
   const { valid, errors } = validateSignUpData({
@@ -18,44 +18,49 @@ export const signUp = async (request: Request, response: Response) => {
   });
 
   if (!valid) {
-    return response.status(400).json(errors);
+    throw new HttpsError('invalid-argument', ErrorMessages.INVALID_USER_DATA, errors);
   }
 
   const userDoc = await db.doc(`/users/${username}`).get();
 
   if (userDoc.exists) {
-    return response.status(400).json({ username: ErrorMessages.USERNAME_IN_USE });
+    throw new HttpsError('invalid-argument', ErrorMessages.USERNAME_IN_USE);
   }
 
+  const credentials = await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+  if (!credentials.user) {
+    throw new HttpsError('not-found', ErrorMessages.USER_MISSING_IN_CRED);
+  }
+
+  const token = await credentials.user.getIdToken();
+  const { uid } = credentials.user;
+  const user: UserData = {
+    username,
+    email,
+    uid,
+    createdAt: new Date().toISOString(),
+  };
+
+  await db.doc(`/users/${username}`).set(user);
+
+  console.log(LogMessages.USER_CREATED, user);
+
+  return { user, token };
+};
+
+export const signUp = async (request: Request, response: Response) => {
   try {
-    const credentials = await firebase.auth().createUserWithEmailAndPassword(email, password);
-
-    if (!credentials.user) {
-      throw new HttpsError('not-found', ErrorMessages.GENERAL_ERORR);
-    }
-
-    const token = await credentials.user.getIdToken();
-    const { uid } = credentials.user;
-    const user: UserData = {
-      username,
-      email,
-      uid,
-      createdAt: new Date().toISOString(),
-    };
-
-    await db.doc(`/users/${username}`).set(user);
-
-    console.log(LogMessages.USER_CREATED, user);
-    return response.status(201).json({ ...user, token });
+    response.status(201).json(await createSignup(request));
   } catch (err) {
-    const { code } = err;
+    const { httpErrorCode } = err;
 
-    console.error(LogMessages.USER_CREATE_ERROR, Error);
+    console.error(LogMessages.USER_CREATE_ERROR, err);
 
-    if (code === 'auth/email-already-in-use') {
-      return response.status(400).json({ email: ErrorMessages.EMAIL_IN_USE });
+    if (httpErrorCode && httpErrorCode.status) {
+      response.status(httpErrorCode.status).json(err);
     } else {
-      return response.status(500).json({ message: ErrorMessages.GENERAL_ERORR, err });
+      response.status(500).json(err);
     }
   }
 };
