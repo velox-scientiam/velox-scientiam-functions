@@ -31,7 +31,7 @@ export const signUp = async (request: Request, response: Response) => {
     const credentials = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
     if (!credentials.user) {
-      throw new HttpsError('aborted', ErrorMessages.GENERAL_ERORR);
+      throw new HttpsError('not-found', ErrorMessages.GENERAL_ERORR);
     }
 
     const token = await credentials.user.getIdToken();
@@ -47,13 +47,15 @@ export const signUp = async (request: Request, response: Response) => {
 
     console.log(LogMessages.USER_CREATED, user);
     return response.status(201).json({ ...user, token });
-  } catch (e) {
-    console.error(LogMessages.USER_CREATE_ERROR, e);
+  } catch (err) {
+    const { code } = err;
 
-    if (e.code === 'auth/email-already-in-use') {
+    console.error(LogMessages.USER_CREATE_ERROR, Error);
+
+    if (code === 'auth/email-already-in-use') {
       return response.status(400).json({ email: ErrorMessages.EMAIL_IN_USE });
     } else {
-      return response.status(500).json({ general: ErrorMessages.GENERAL_ERORR });
+      return response.status(500).json({ message: ErrorMessages.GENERAL_ERORR, err });
     }
   }
 };
