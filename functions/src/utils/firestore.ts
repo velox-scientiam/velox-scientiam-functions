@@ -1,9 +1,7 @@
 import * as admin from 'firebase-admin';
 
-import * as serviceAccount from '../env/velox-80fb5-firebase-adminsdk-u85ov-9191ce2305.json';
-
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as any),
+  credential: admin.credential.applicationDefault(),
   databaseURL: 'https://velox-80fb5.firebaseio.com',
 });
 

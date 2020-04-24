@@ -1,15 +1,14 @@
 import * as firebase from 'firebase';
+import { HttpsError } from 'firebase-functions/lib/providers/https';
 import { Request, Response } from 'express';
 
 import { validateSignUpData, db, config } from '../utils';
-import { ErrorMessages } from '../interfaces';
+import { ErrorMessages, UserData, LogMessages } from '../interfaces';
 
 firebase.initializeApp(config);
 
-export const signUp = (request: Request, response: Response) => {
+export const signUp = async (request: Request, response: Response) => {
   const { email, password, confirmPassword, username } = request.body;
-  let token: string;
-  let userId: string;
 
   const { valid, errors } = validateSignUpData({
     email,
@@ -18,48 +17,43 @@ export const signUp = (request: Request, response: Response) => {
     username,
   });
 
-  if (!valid) return response.status(400).json(errors);
+  if (!valid) {
+    return response.status(400).json(errors);
+  }
 
-  return db
-    .doc(`/users/${username}`)
-    .get()
-    .then((doc: firebase.firestore.DocumentData) => {
-      if (doc.exists) {
-        return response.status(400).json({ username: ErrorMessages.USERNAME_IN_USE });
-      } else {
-        return firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then((data: firebase.auth.UserCredential) => {
-            if (!data.user) {
-              throw new Error(ErrorMessages.GENERAL_ERORR);
-            }
+  const userDoc = await db.doc(`/users/${username}`).get();
 
-            userId = data.user.uid;
-            return data.user.getIdToken();
-          })
-          .then((idToken: string) => {
-            token = idToken;
+  if (userDoc.exists) {
+    return response.status(400).json({ username: ErrorMessages.USERNAME_IN_USE });
+  }
 
-            return db.doc(`/users/${username}`).set({
-              username,
-              email,
-              userId,
-              createdAt: new Date().toISOString(),
-            });
-          })
-          .then(() => {
-            return response.status(201).json({ token });
-          })
-          .catch((e) => {
-            console.error(e);
+  try {
+    const credentials = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
-            if (e.code === 'auth/email-already-in-use') {
-              return response.status(400).json({ email: ErrorMessages.EMAIL_IN_USE });
-            } else {
-              return response.status(500).json({ general: ErrorMessages.GENERAL_ERORR });
-            }
-          });
-      }
-    });
+    if (!credentials.user) {
+      throw new HttpsError('aborted', ErrorMessages.GENERAL_ERORR);
+    }
+
+    const token = await credentials.user.getIdToken();
+    const { uid } = credentials.user;
+    const user: UserData = {
+      username,
+      email,
+      uid,
+      createdAt: new Date().toISOString(),
+    };
+
+    await db.doc(`/users/${username}`).set(user);
+
+    console.log(LogMessages.USER_CREATED, user);
+    return response.status(201).json({ ...user, token });
+  } catch (e) {
+    console.error(LogMessages.USER_CREATE_ERROR, e);
+
+    if (e.code === 'auth/email-already-in-use') {
+      return response.status(400).json({ email: ErrorMessages.EMAIL_IN_USE });
+    } else {
+      return response.status(500).json({ general: ErrorMessages.GENERAL_ERORR });
+    }
+  }
 };
