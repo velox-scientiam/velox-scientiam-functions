@@ -34,10 +34,10 @@ const mockResponse = () => {
 };
 
 describe('Functions', () => {
-  let adminInitStub: any;
-  let dbStub: any;
-  let authStub: any;
-  let clock: any;
+  let adminInitStub: sinon.SinonStub;
+  let dbStub: sinon.SinonStub;
+  let authStub: sinon.SinonStub;
+  let clock: sinon.SinonFakeTimers;
 
   before(() => {
     adminInitStub = sinon.stub(admin, 'initializeApp');
