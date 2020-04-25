@@ -111,5 +111,14 @@ describe('Functions', () => {
 
       expect(res.status).to.have.been.calledWith(400);
     });
+
+    it('should fail when email is not valid', async () => {
+      const req = mockRequest({ ...MOCK_SIGNUP, email: 'this-is-not-email' });
+      const res = mockResponse();
+
+      await functions.signUp(req, res);
+
+      expect(res.status).to.have.been.calledWith(400);
+    });
   });
 });
