@@ -1,2 +1,2 @@
-export * from './firestore';
+export * from './config';
 export * from './validators';

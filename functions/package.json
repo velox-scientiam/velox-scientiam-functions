@@ -11,7 +11,7 @@
     "serve": "yarn build && firebase emulators:start --only functions",
     "shell": "yarn build && firebase functions:shell",
     "start": "yarn shell",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "test": "mocha -r ts-node/register src/test/**/*.spec.ts",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
