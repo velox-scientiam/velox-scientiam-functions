@@ -12,7 +12,7 @@ Cloud functions for velox-scientiam
 - Build `yarn build`
 - Deploy to firebase `yarn deploy`
 
-For running the functions locally you need to add `GOOGLE_APPLICATION_CREDENTIALS` environment variable with the path to to the credentials file. Instructions found in [`Firebase docs`](https://firebase.google.com/docs/admin/setup#initialize-sdk)
+For running the functions locally you need to add `GOOGLE_APPLICATION_CREDENTIALS` environment variable with the path to the credentials file. Instructions found in [`Firebase docs`](https://firebase.google.com/docs/admin/setup#initialize-sdk)
 
 ## Other useful commands
 
