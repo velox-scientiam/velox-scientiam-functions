@@ -38,7 +38,7 @@ Example request body:
 }
 ```
 
-Example return value
+Example return value:
 
 ```
 {
