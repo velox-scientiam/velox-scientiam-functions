@@ -7,6 +7,7 @@ admin.initializeApp({
 
 export const db = admin.firestore();
 
+// Public Firebase SDK config
 export const config = {
   apiKey: 'AIzaSyDlnO7l_vFoE-D27-wNEjYZa8Bdk0sQ2a8',
   authDomain: 'velox-80fb5.firebaseapp.com',
