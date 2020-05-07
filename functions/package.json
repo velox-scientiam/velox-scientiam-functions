@@ -14,9 +14,9 @@
     "test": "mocha -r ts-node/register src/test/**/*.spec.ts",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "clean": "rimraf .jsonx src/codegen",
-    "create-barrel": "node create-barrel.js src/codegen/model",
-    "generate": "yarn clean && openapi-generator generate -i openapi.yaml -g typescript-angular -o src/codegen -Dmodels --additional-properties=\"stringEnums=true\" && yarn create-barrel"
+    "clean": "rimraf src/codegen/*",
+    "create-models-barrel": "node create-barrel.js src/codegen/model",
+    "generate": "yarn clean && openapi-generator generate -i openapi.yaml -g typescript-angular -o src/codegen -Dmodels --additional-properties=\"stringEnums=true\" && yarn create-models-barrel"
   },
   "engines": {
     "node": "10"
