@@ -16,6 +16,7 @@ For running the functions locally you need to add `GOOGLE_APPLICATION_CREDENTIAL
 
 ## Other useful commands
 
+- Generate dynamic models based on functions/openapi.yaml `yarn generate`
 - Run tslint `yarn lint`
 - Run unit tests `yarn test`
 - Run prettier and fix `yarn prettier`
