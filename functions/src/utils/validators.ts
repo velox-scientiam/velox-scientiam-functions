@@ -1,4 +1,5 @@
-import { SignUpData, ErrorMessages } from '../interfaces';
+import { SignUpData } from '../codegen/model';
+import { ErrorMessages } from '../interfaces';
 
 export const isEmpty = (s: string) => !s || !s.trim();
 
