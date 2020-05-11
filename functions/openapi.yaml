@@ -1,0 +1,68 @@
+openapi: 3.0.2
+info:
+  title: Velox Scientiam Functions
+  version: 0.1
+servers:
+  - url: https://europe-west1-velox-80fb5.cloudfunctions.net/api
+    description: Firebase endpoint
+paths:
+  /signup:
+    post:
+      summary: Creates an user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpData'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpResponse'
+components:
+  schemas:
+    SignUpData:
+      type: object
+      properties:
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+      required:
+        - email
+        - username
+        - password
+        - confirmPassword
+    UserData:
+      type: object
+      properties:
+        email:
+          type: string
+        username:
+          type: string
+        uid:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - email
+        - username
+        - password
+        - confirmPassword
+    SignUpResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserData'
+      required:
+        - token
+        - user

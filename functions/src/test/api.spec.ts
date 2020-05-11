@@ -6,7 +6,7 @@ import * as test from 'firebase-functions-test';
 import { use, expect } from 'chai';
 
 import { db } from '../utils';
-import { SignUpData } from '../interfaces';
+import { SignUpData } from '../codegen/model';
 import * as functions from '../handlers';
 
 const testSuite = test();

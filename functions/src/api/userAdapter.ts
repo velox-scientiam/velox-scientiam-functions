@@ -2,12 +2,13 @@ import * as firebase from 'firebase';
 import { HttpsError } from 'firebase-functions/lib/providers/https';
 import { Request } from 'express';
 
+import { UserData, SignUpResponse } from '../codegen/model';
 import { validateSignUpData, db, config } from '../utils';
-import { ErrorMessages, UserData, LogMessages, SignupResponse } from '../interfaces';
+import { ErrorMessages, LogMessages } from '../interfaces';
 
 firebase.initializeApp(config);
 
-export const createSignup = async (request: Request): Promise<SignupResponse> => {
+export const createSignup = async (request: Request): Promise<SignUpResponse> => {
   const { email, password, confirmPassword, username } = request.body;
 
   const { valid, errors } = validateSignUpData({
